@@ -1,4 +1,6 @@
 <?php
+use HMinng\AtsHook\Base\AtsHookBase;
+
 final class AtsHook extends AtsHookBase {
 	private static $instance = null;
 	

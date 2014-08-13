@@ -1,4 +1,6 @@
 <?php
+namespace HMinng\AtsHook\Base;
+
 class AtsHookBase
 {
 	public $directory = null;
