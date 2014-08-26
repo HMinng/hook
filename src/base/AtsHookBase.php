@@ -14,13 +14,13 @@ class AtsHookBase
 	public function __construct($directory, $cacheDirectory = null, $debugMode = false)
 	{
 		if (!is_dir($directory)) {
-			throw new Exception('Please specify the hook directory', 0);
+			throw new \Exception('Please specify the hook directory', 0);
 		}
 		
 		is_null($cacheDirectory) && $cacheDirectory = sys_get_temp_dir();
 		
 		if (!is_dir($cacheDirectory)) {
-			throw new Exception('Please specify the cache directory for hook', 0);
+			throw new \Exception('Please specify the cache directory for hook', 0);
 		}
 		$this->directory = rtrim($directory, '\/');
 		$this->cacheDirectory = rtrim($cacheDirectory, '\/');
@@ -43,14 +43,15 @@ class AtsHookBase
 		$args = func_get_args();
 		return implode(DIRECTORY_SEPARATOR, $args);
 	}
-	
-	/**
-	 * Get the hook filename
-	 * 
-	 * @param string $hook
-	 * @param string $hookName
-	 * @return string
-	 */
+
+    /**
+     * Get the hook filename
+     *
+     * @param $directory
+     * @param string $hookName
+     * @internal param string $hook
+     * @return string
+     */
 	private function getHookFilename($directory, $hookName)
 	{
 		return $this->directorySeparator($directory, $hookName . 'Hook.php');
@@ -66,13 +67,14 @@ class AtsHookBase
 	{
 		return $this->directorySeparator($this->cacheDirectory, $hookName . 'Hook.Cached.php');
 	}
-	
-	/**
-	 * Get hook directories, Except `lib` directory.
-	 * and begin with char `_` is only for debug mode.
-	 * 
-	 * @return array
-	 */
+
+    /**
+     * Get hook directories, Except `lib` directory.
+     * and begin with char `_` is only for debug mode.
+     *
+     * @param string $dir
+     * @return array
+     */
 	private function getHookDirectories($dir = null)
 	{
 		is_null($dir) && $dir = $this->directory;
@@ -140,14 +142,14 @@ class AtsHookBase
 		$tag_number && $stripStr .= "\n?>";
 		return $stripStr;
 	}
-	
-	/**
-	 * Register a hook
-	 *
-	 * @param string $hookClassName Prefix_For_Hook_[AfterCreateTmpOrder]Hook => In [a-zA-Z0-9]+ is hook for trigger name.
-	 * @param number $priority
-	 * @return boolean
-	 */
+
+    /**
+     * Register a hook
+     *
+     * @param string $hookClassName Prefix_For_Hook_[AfterCreateTmpOrder]Hook => In [a-zA-Z0-9]+ is hook for trigger name.
+     * @param int|number $priority
+     * @return boolean
+     */
 	public function register($hookClassName, $priority = 10)
 	{
 		list($hookClassName, $priority) = array(strval($hookClassName), intval($priority));
@@ -207,7 +209,7 @@ class AtsHookBase
 			} else if ($this->debugMode) {
 				$hookFilename = $this->getHookFilename($directory, '_' . $hookName);
 				if ($this->isFile($hookFilename)) {
-					require_once $hookFilename;
+                    require_once $hookFilename;
 					$hookFilenames[] = $hookFilename;
 				}
 			}
@@ -224,7 +226,7 @@ class AtsHookBase
 		if ($isError) {
 			$backtrace = array();
 			$traces = array_slice(debug_backtrace(false), 0, 5);
-			foreach($traces as $k => $trace) {
+			foreach($traces as $trace) {
 				$backtrace[] = array(
 					'file' => $trace['file'],
 					'line' => $trace['line'],
@@ -240,6 +242,8 @@ class AtsHookBase
 		} else {
 			self::$traces[] = array('summary' => $summary, 'message' => $message);
 		}
+
+        return true;
 	}
 
 	public function get_trigger_trace()
@@ -247,13 +251,14 @@ class AtsHookBase
 		return self::$traces;
 	}
 
-	/**
-	 * Trigger a hook
-	 * 
-	 * @param string $hookName
-	 * @param mixed $data
-	 * @return mixed
-	 */
+    /**
+     * Trigger a hook
+     *
+     * @param string $hookName
+     * @param mixed $data
+     * @throws \Exception
+     * @return mixed
+     */
 	public function trigger($hookName, $data = null)
 	{
 		$this->import($hookName);
@@ -270,7 +275,7 @@ class AtsHookBase
 					$instance->apply($data);
 					unset($instance);
 					$this->set_trigger_trace('apply class' . $hookClassName, 'success');
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					$this->set_trigger_trace('apply class ' . $hookClassName, 'error: ' . json_encode($e->getMessage()), true);
 					throw $e;
 				}
