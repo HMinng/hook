@@ -12,14 +12,18 @@ final class AtsHook extends AtsHookBase {
 	}
 	
 	public function __construct() {
-		$cache = storage_path().DIRECTORY_SEPARATOR.'hook'.DIRECTORY_SEPARATOR.'cache';
-		
+		$cache = __DIR__ . '/../../../cache';
+
 		if ( ! is_dir($cache)) {
 			@mkdir($cache, 0777, true);
 		}
-		
+
+        if ( ! is_writable($cache)) {
+            @chmod($cache, 0777);
+        }
+
 		parent::__construct(
-			app_path().DIRECTORY_SEPARATOR.'lib'.DIRECTORY_SEPARATOR.'module',
+            $cache . '/../application/services',
 			$cache,
 			true
 		);

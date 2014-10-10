@@ -262,7 +262,9 @@ class AtsHookBase
 	public function trigger($hookName, $data = null)
 	{
 		$this->import($hookName);
-		if (empty(self::$listeners[$hookName])) return 0;
+		if (empty(self::$listeners[$hookName])) {
+            throw new \Exception('No hook be found');
+        }
 
 		$this->set_trigger_trace('start hook ', $hookName);
 		krsort(self::$listeners[$hookName], SORT_NUMERIC);
