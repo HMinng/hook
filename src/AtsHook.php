@@ -23,7 +23,7 @@ final class AtsHook extends AtsHookBase {
         }
 
 		parent::__construct(
-            $cache . '/../application/services',
+            $cache . '/../application/hook',
 			$cache,
 			true
 		);
