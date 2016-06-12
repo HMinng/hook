@@ -200,7 +200,7 @@ class AtsHookBase
 		}
 		
 		$hookFilenames = array();
-		
+
 		foreach ($this->getHookDirectories() as $directory) {
 			$hookFilename = $this->getHookFilename($directory, $hookName);
 			if ($this->isFile($hookFilename)) {

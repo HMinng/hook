@@ -12,7 +12,7 @@ final class AtsHook extends AtsHookBase {
 	}
 	
 	public function __construct() {
-		$cache = __DIR__ . '/../../../cache';
+		$cache = APPLICATION_PATH . '/../application/hook/cache';
 
 		if ( ! is_dir($cache)) {
 			@mkdir($cache, 0777, true);
@@ -23,7 +23,7 @@ final class AtsHook extends AtsHookBase {
         }
 
 		parent::__construct(
-            $cache . '/../application/hook',
+            $cache . '/../hook',
 			$cache,
 			true
 		);
